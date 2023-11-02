@@ -1,0 +1,15 @@
+{
+    "name": "John Doe",
+    "email": "john@doe.com",
+    "merek": "MyProduct",
+    "nomor_registrasi": "121121",
+    "nama_pemilik": "Jane Smith",
+    "hubungan_pelapor": "Business Partner",
+    "nama_perusahaan": "XYZ Corporation",
+    "pemilik_haki_": true,
+    "website_perusahaan": "https://www.xyzcorp.com",
+    "alamat_perusahaan": "123 Main Street, City",
+    "alamat_email_pemilik_merek": "jane@xyzcorp.com",
+    "no_telepon_pelapor": "5551234567",
+    "link_barang": "https://www.xyzcorp.com/product123"
+}
