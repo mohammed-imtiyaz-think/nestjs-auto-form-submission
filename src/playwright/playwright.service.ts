@@ -12,7 +12,7 @@ export class PlaywrightService {
 
   async setupBrowser() {
     this.browser = await chromium.launch({
-      headless: true,
+      headless: false,
     });
     this.page = await this.browser.newPage();
   }
@@ -26,12 +26,13 @@ export class PlaywrightService {
       nama_pemilik: '[name="nama_pemilik"]',
       hubungan_pelapor: '[name="hubungan_pelapor"]',
       nama_perusahaan: '[name="nama_perusahaan"]',
-      pemilik_haki: '[name="pemilik_haki_"]',
       website_perusahaan: '[name="website_perusahaan"]',
       alamat_perusahaan: '[name="alamat_perusahaan"]',
       alamat_email_pemilik_merek: '[name="alamat_email_pemilik_merek"]',
       no_telepon_pelapor: '[name="no_telepon_pelapor"]',
       link_barang: '[name="link_barang"]',
+      bukti_surat_kuasa: '[name="bukti_surat_kuasa"]',
+      bukti_surat_izin_usaha: '[name="bukti_surat_izin_usaha"]',
       body: '[name="body"]',
     };
 
@@ -49,9 +50,9 @@ export class PlaywrightService {
       await this.page.fill(selectors.hubungan_pelapor, data.hubungan_pelapor);
       await this.page.fill(selectors.nama_perusahaan, data.nama_perusahaan);
 
-      if (data.pemilik_haki) {
-        await this.page.check(selectors.pemilik_haki);
-      }
+      const radioXPath = `//input[@type='radio' and @value='Iya (Yes)']`;
+
+      await this.page.click(radioXPath);
 
       await this.page.fill(
         selectors.website_perusahaan,
@@ -80,11 +81,24 @@ export class PlaywrightService {
       );
       await uploadFileTwo.setInputFiles('src/files/empty_file_2.docx');
 
+      const uploadPDFFileOne = await this.page.$(
+        'input[name="bukti_surat_kuasa"]',
+      );
+      await uploadPDFFileOne.setInputFiles('src/files/empty_file_3.pdf');
+      const uploadPDFFileTwo = await this.page.$(
+        'input[name="bukti_surat_izin_usaha"]',
+      );
+      await uploadPDFFileTwo.setInputFiles('src/files/empty_file_3.pdf');
       await this.page.click('input[type="checkbox"]');
       await this.page.click('[type="Submit"]');
 
+      const responseSelector = '.u-lede';
+      await this.page.waitForSelector(responseSelector);
+
+      const responseText = await this.page.textContent(responseSelector);
+
       return {
-        message: 'Thanks for submiting form',
+        message: responseText,
       };
     } catch (error) {
       console.error('Form submission failed:', error);
