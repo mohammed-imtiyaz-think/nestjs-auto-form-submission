@@ -12,7 +12,7 @@ export class PlaywrightService {
 
   async setupBrowser() {
     this.browser = await chromium.launch({
-      headless: false,
+      headless: true,
     });
     this.page = await this.browser.newPage();
   }
@@ -37,8 +37,14 @@ export class PlaywrightService {
     };
 
     try {
+      console.log('Form Submitting started....');
+
+      console.log('Opening the form...');
       await this.page.goto('https://bukabantuan.bukalapak.com/form/175');
 
+      console.log('Form opened successfully');
+
+      console.log('Filling the form...');
       await this.page.fill(selectors.name, data.name);
 
       await this.page.fill(selectors.email, data.email);
@@ -90,6 +96,10 @@ export class PlaywrightService {
       );
       await uploadPDFFileTwo.setInputFiles('src/files/empty_file_3.pdf');
       await this.page.click('input[type="checkbox"]');
+
+      console.log('Form is filled...');
+
+      console.log('Submitting the form....');
       await this.page.click('[type="Submit"]');
 
       const responseSelector = '.u-lede';
@@ -97,6 +107,11 @@ export class PlaywrightService {
 
       const responseText = await this.page.textContent(responseSelector);
 
+      if (responseText) {
+        console.log('Form Submitted Successfully...');
+      }
+
+      console.log('Confirmation Message: ', responseText);
       return {
         message: responseText,
       };
